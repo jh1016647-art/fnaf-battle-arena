@@ -3,19 +3,22 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Golden Freddy vs Glitch Freddy</title>
+  <title>Golden Freddy vs Glitch Freddy and Alexander</title>
   <style>
     :root {
-      --bg: #05070b;
-      --bg2: #0d1017;
-      --gold: #d7b05a;
-      --gold2: #9a6c1f;
-      --glitch: #69d7ff;
-      --glitch2: #5d7dff;
-      --red: #ff4a4a;
+      --bg: #04070d;
+      --panel: #111822;
+      --panel-2: #171d27;
+      --gold: #d9b15f;
+      --gold-dark: #8b651f;
+      --glitch: #73d8ff;
+      --glitch-dark: #355bc9;
+      --alex: #88ff9a;
+      --alex-dark: #2e8d55;
+      --danger: #ff4f4f;
       --white: #edf3ff;
-      --dark: #0b0d11;
-      --line: rgba(255,255,255,0.15);
+      --shadow: rgba(0,0,0,0.75);
+      --line: rgba(255,255,255,0.18);
     }
 
     * { box-sizing: border-box; }
@@ -25,46 +28,101 @@
       width: 100%;
       height: 100%;
       overflow: hidden;
-      background: var(--bg);
-      color: var(--white);
+      background: #02060a;
       font-family: Arial, Helvetica, sans-serif;
+      color: var(--white);
     }
 
-    body {
-      display: grid;
-      place-items: center;
-    }
+    body { display: grid; place-items: center; }
 
-    #arena {
+    #game {
       position: relative;
       width: min(1200px, 96vw);
       height: min(760px, 92vh);
-      background: radial-gradient(circle at center, #151b23 0%, #090d12 45%, #030507 100%);
-      border: 2px solid #2a3340;
-      box-shadow: 0 0 35px rgba(0,0,0,0.85);
+      border: 2px solid #2b3742;
       overflow: hidden;
+      background: radial-gradient(circle at center, rgba(130,150,190,0.12), transparent 34%), linear-gradient(180deg, #0b1016, #070a0f 60%, #020406 100%);
+      box-shadow: 0 0 40px rgba(0,0,0,0.9);
+    }
+
+    #titleScreen {
+      position: absolute;
+      inset: 0;
+      z-index: 50;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(180deg, rgba(7,10,15,0.7), rgba(2,4,7,0.9)), radial-gradient(circle at center, rgba(255,212,111,0.12), transparent 30%);
+    }
+
+    .titlePanel {
+      width: min(780px, 82vw);
+      padding: 30px 28px 26px;
+      border: 2px solid rgba(255,255,255,0.12);
+      background: rgba(11,16,21,0.9);
+      box-shadow: 0 0 30px rgba(0,0,0,0.8);
+      text-align: center;
+    }
+
+    .titleText {
+      font-size: clamp(26px, 5vw, 54px);
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      font-weight: bold;
+      color: #f3d789;
+      margin-bottom: 12px;
+      text-shadow: 0 0 18px rgba(245,214,125,0.2);
+    }
+
+    .subtitle {
+      font-size: 12px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: #dfeaf5;
+      margin-bottom: 22px;
+    }
+
+    .startBtn {
+      padding: 14px 30px;
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(217,177,95,0.12);
+      color: #f4d88a;
+      font-size: 12px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: 0.12s ease;
+    }
+
+    .startBtn:hover {
+      background: rgba(240,201,108,0.18);
+    }
+
+    #arena {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      display: block;
     }
 
     #sky {
       position: absolute;
       inset: 0;
-      background:
-        linear-gradient(180deg, rgba(8, 16, 28, 0.8), rgba(8, 11, 18, 0.2) 50%, rgba(0,0,0,0.6) 100%),
-        radial-gradient(circle at center, rgba(135, 145, 180, 0.09), transparent 40%);
+      background: linear-gradient(180deg, rgba(18,24,35,0.46), rgba(4,6,9,0.18) 50%, rgba(0,0,0,0.74) 100%);
+      z-index: 0;
     }
 
     .storm {
       position: absolute;
       inset: 0;
-      background:
-        repeating-linear-gradient(
-          140deg,
-          rgba(255,255,255,0.04) 0,
-          rgba(255,255,255,0.04) 2px,
-          transparent 2px,
-          transparent 8px
-        );
-      opacity: 0.28;
+      background: repeating-linear-gradient(
+        150deg,
+        rgba(255,255,255,0.03) 0,
+        rgba(255,255,255,0.03) 2px,
+        transparent 2px,
+        transparent 12px
+      );
+      opacity: 0.5;
+      z-index: 1;
       mix-blend-mode: screen;
     }
 
@@ -73,40 +131,43 @@
       inset: 0;
       background: rgba(255,255,255,0.9);
       opacity: 0;
+      z-index: 2;
       pointer-events: none;
-      animation: flash 3s infinite;
+      animation: flash 4.2s infinite;
     }
 
     @keyframes flash {
-      0%, 18%, 20%, 22%, 24%, 26%, 100% { opacity: 0; }
-      19% { opacity: 0.9; }
-      21% { opacity: 0.15; }
-      23% { opacity: 0.8; }
-      25% { opacity: 0.25; }
+      0%, 17%, 18.5%, 19.5%, 20%, 23%, 28%, 100% { opacity: 0; }
+      18% { opacity: 1; }
+      19% { opacity: 0.18; }
+      20.5% { opacity: 0.9; }
+      22% { opacity: 0.3; }
+      24% { opacity: 0.7; }
     }
 
     .lightning {
       position: absolute;
-      width: 6px;
-      height: 180px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.75), rgba(120,180,255,0.2), transparent 90%);
-      box-shadow: 0 0 18px rgba(130,200,255,0.6);
-      transform-origin: top center;
+      width: 8px;
+      height: 220px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.8), rgba(140,190,255,0.28), transparent 90%);
+      box-shadow: 0 0 22px rgba(130,200,255,0.7);
       opacity: 0;
-      animation: lightning 3.4s infinite ease-in-out;
+      transform-origin: top center;
+      z-index: 2;
+      animation: lightning 3.6s infinite ease-in-out;
     }
 
-    .lightning:nth-child(1) { left: 18%; top: 2%; animation-delay: 0.1s; }
-    .lightning:nth-child(2) { left: 62%; top: 1%; animation-delay: 0.8s; }
-    .lightning:nth-child(3) { left: 74%; top: 6%; animation-delay: 1.5s; }
-    .lightning:nth-child(4) { left: 45%; top: 10%; animation-delay: 2.4s; }
+    .lightning.l1 { left: 18%; top: 0; animation-delay: 0.2s; }
+    .lightning.l2 { left: 47%; top: 3%; animation-delay: 1.2s; }
+    .lightning.l3 { left: 69%; top: 4%; animation-delay: 1.8s; }
+    .lightning.l4 { left: 84%; top: 8%; animation-delay: 2.6s; }
 
     @keyframes lightning {
-      0%, 14%, 18%, 100% { opacity: 0; transform: scaleY(0.2); }
-      15% { opacity: 1; transform: scaleY(1); }
-      16% { opacity: 0.5; transform: scaleY(0.9); }
-      17% { opacity: 0.8; transform: scaleY(1.05); }
-      18% { opacity: 0; transform: scaleY(0.3); }
+      0%, 15%, 18%, 100% { opacity: 0; transform: scaleY(0.2); }
+      16% { opacity: 1; transform: scaleY(1); }
+      16.4% { opacity: 0.5; transform: scaleY(0.9); }
+      17% { opacity: 0.8; transform: scaleY(1.08); }
+      17.2% { opacity: 0; transform: scaleY(0.4); }
     }
 
     #ground {
@@ -114,36 +175,33 @@
       left: 0;
       right: 0;
       bottom: 0;
-      height: 220px;
-      background: linear-gradient(180deg, rgba(15, 18, 22, 0.5), rgba(4, 5, 8, 1));
+      height: 210px;
+      background: linear-gradient(180deg, rgba(15,18,22,0.5), rgba(4,5,8,0.95));
       border-top: 2px solid rgba(255,255,255,0.08);
+      z-index: 3;
     }
 
     #ground::before {
       content: "";
       position: absolute;
       inset: 0;
-      background: repeating-linear-gradient(
-        90deg,
-        rgba(255,255,255,0.02) 0 2px,
-        transparent 2px 18px
-      );
-      opacity: 0.3;
+      background: repeating-linear-gradient(90deg, rgba(255,255,255,0.018) 0 2px, transparent 2px 20px);
+      opacity: 0.35;
     }
 
     #battlefield {
       position: absolute;
       inset: 0;
-      z-index: 3;
+      z-index: 6;
     }
 
     .fighter {
       position: absolute;
-      bottom: 80px;
+      bottom: 96px;
       width: 260px;
       height: 420px;
-      transition: transform 0.25s ease, filter 0.25s ease;
-      filter: drop-shadow(0 0 18px rgba(255,255,255,0.08));
+      transition: transform 0.22s ease, filter 0.22s ease;
+      z-index: 7;
     }
 
     .fighter .head {
@@ -154,8 +212,8 @@
       width: 120px;
       height: 108px;
       border-radius: 18px 18px 22px 22px;
-      border: 4px solid #111;
-      box-shadow: inset 0 0 16px rgba(255,255,255,0.1);
+      border: 4px solid #101010;
+      box-shadow: inset 0 0 16px rgba(255,255,255,0.12);
     }
 
     .fighter .body {
@@ -164,34 +222,35 @@
       top: 104px;
       transform: translateX(-50%);
       width: 120px;
-      height: 140px;
+      height: 145px;
       border-radius: 18px 18px 12px 12px;
-      border: 4px solid #111;
-      box-shadow: inset 0 0 12px rgba(255,255,255,0.1);
+      border: 4px solid #101010;
+      box-shadow: inset 0 0 12px rgba(255,255,255,0.12);
     }
 
     .fighter .arm, .fighter .leg {
       position: absolute;
-      border: 4px solid #111;
+      border: 4px solid #101010;
       border-radius: 16px;
     }
 
     .fighter .foot {
       position: absolute;
       bottom: 0;
-      width: 44px;
+      width: 46px;
       height: 12px;
       border-radius: 12px;
-      background: #0b0d11;
+      background: #090b0d;
     }
 
     #golden {
-      left: 18%;
+      left: 13%;
       animation: goldenIdle 2.8s infinite ease-in-out;
+      filter: drop-shadow(0 0 18px rgba(255, 203, 90, 0.18));
     }
 
     #golden .head {
-      background: linear-gradient(180deg, #d6c077, #9a7a2c);
+      background: linear-gradient(180deg, #d9c77b, #9b7a2b);
     }
 
     #golden .head::before,
@@ -201,7 +260,7 @@
       top: 34px;
       width: 16px;
       height: 18px;
-      background: #0e0f0f;
+      background: #0c0c0c;
       border-radius: 4px;
       box-shadow: 0 0 8px rgba(255,205,90,0.7);
     }
@@ -216,13 +275,13 @@
       transform: translateX(-50%);
       width: 68px;
       height: 22px;
-      background: linear-gradient(180deg, #d5c37f, #90742d);
+      background: linear-gradient(180deg, #d8c07f, #947629);
       border: 4px solid #111;
       border-radius: 14px;
     }
 
     #golden .body {
-      background: linear-gradient(180deg, #d9d9d7, #a5a6a2);
+      background: linear-gradient(180deg, #d9d9d7, #a0a5a8);
     }
 
     #golden .body::before {
@@ -243,7 +302,7 @@
       width: 18px;
       height: 98px;
       transform: rotate(18deg);
-      background: linear-gradient(180deg, #d8d7d3, #a6a5a2);
+      background: linear-gradient(180deg, #dcdcd8, #a4a7ab);
     }
 
     #golden .arm.right {
@@ -252,38 +311,39 @@
       width: 18px;
       height: 98px;
       transform: rotate(-18deg);
-      background: linear-gradient(180deg, #d8d7d3, #a6a5a2);
+      background: linear-gradient(180deg, #dcdcd8, #a4a7ab);
     }
 
     #golden .leg.left {
       left: 58px;
-      top: 216px;
+      top: 220px;
       width: 18px;
       height: 96px;
       transform: rotate(8deg);
-      background: linear-gradient(180deg, #d8d7d3, #a6a5a2);
+      background: linear-gradient(180deg, #dcdcd8, #a4a7ab);
     }
 
     #golden .leg.right {
       right: 58px;
-      top: 216px;
+      top: 220px;
       width: 18px;
       height: 96px;
       transform: rotate(-8deg);
-      background: linear-gradient(180deg, #d8d7d3, #a6a5a2);
+      background: linear-gradient(180deg, #dcdcd8, #a4a7ab);
     }
 
     #golden .foot.left { left: 42px; }
     #golden .foot.right { right: 42px; }
 
     #glitch {
-      right: 18%;
+      left: 40%;
       animation: glitchIdle 2.3s infinite ease-in-out;
+      filter: drop-shadow(0 0 18px rgba(90,205,255,0.2));
     }
 
     #glitch .head {
-      background: linear-gradient(180deg, #6fd8ff, #486ae6);
-      box-shadow: inset 0 0 14px rgba(255,255,255,0.14), 0 0 16px rgba(105, 215, 255, 0.3);
+      background: linear-gradient(180deg, #6fd8ff, #527bee);
+      box-shadow: inset 0 0 14px rgba(255,255,255,0.12), 0 0 18px rgba(95,220,255,0.25);
     }
 
     #glitch .head::before,
@@ -295,23 +355,11 @@
       height: 18px;
       background: #061015;
       border-radius: 4px;
-      box-shadow: 0 0 8px rgba(83,219,255,0.7);
+      box-shadow: 0 0 8px rgba(98,218,255,0.7);
     }
 
     #glitch .head::before { left: 20px; }
     #glitch .head::after { right: 20px; }
-
-    #glitch .body {
-      background: linear-gradient(180deg, #4fdcff, #3f4dcb);
-      box-shadow: inset 0 0 12px rgba(255,255,255,0.12), 0 0 16px rgba(81, 150, 255, 0.24);
-    }
-
-    #glitch .arm.left,
-    #glitch .arm.right,
-    #glitch .leg.left,
-    #glitch .leg.right {
-      background: linear-gradient(180deg, #74dfff, #4a69db);
-    }
 
     #glitch .muzzle {
       position: absolute;
@@ -320,9 +368,14 @@
       transform: translateX(-50%);
       width: 70px;
       height: 24px;
-      background: linear-gradient(180deg, #9aeaff, #4d6de3);
+      background: linear-gradient(180deg, #9ceaff, #4d6fe6);
       border: 4px solid #111;
       border-radius: 14px;
+    }
+
+    #glitch .body {
+      background: linear-gradient(180deg, #54d9ff, #3d4dd0);
+      box-shadow: inset 0 0 12px rgba(255,255,255,0.12), 0 0 16px rgba(82,180,255,0.22);
     }
 
     #glitch .body::before {
@@ -333,38 +386,174 @@
       width: 52px;
       height: 58px;
       transform: translateX(-50%);
-      background: rgba(0,0,0,0.13);
+      background: rgba(0,0,0,0.12);
       border-radius: 8px;
+    }
+
+    #glitch .arm.left,
+    #glitch .arm.right,
+    #glitch .leg.left,
+    #glitch .leg.right {
+      background: linear-gradient(180deg, #74dcff, #4d69d8);
+    }
+
+    #alexander {
+      right: 12%;
+      animation: alexIdle 2.5s infinite ease-in-out;
+      filter: drop-shadow(0 0 18px rgba(136,255,154,0.22));
+    }
+
+    #alexander .head {
+      background: linear-gradient(180deg, #b8ffd0, #2d8f65);
+      box-shadow: inset 0 0 14px rgba(255,255,255,0.12), 0 0 18px rgba(102,255,172,0.24);
+    }
+
+    #alexander .head::before,
+    #alexander .head::after {
+      content: "";
+      position: absolute;
+      top: 34px;
+      width: 14px;
+      height: 18px;
+      background: #0b1712;
+      border-radius: 4px;
+      box-shadow: 0 0 8px rgba(120,255,170,0.7);
+    }
+
+    #alexander .head::before { left: 22px; }
+    #alexander .head::after { right: 22px; }
+
+    #alexander .muzzle {
+      position: absolute;
+      left: 50%;
+      top: 70px;
+      transform: translateX(-50%);
+      width: 70px;
+      height: 24px;
+      background: linear-gradient(180deg, #cbffd4, #50a76d);
+      border: 4px solid #111;
+      border-radius: 14px;
+    }
+
+    #alexander .body {
+      background: linear-gradient(180deg, #d0ffdd, #68b98b);
+      box-shadow: inset 0 0 12px rgba(255,255,255,0.12), 0 0 16px rgba(130,255,165,0.22);
+    }
+
+    #alexander .body::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 18px;
+      width: 52px;
+      height: 58px;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.1);
+      border-radius: 8px;
+    }
+
+    #alexander .arm.left,
+    #alexander .arm.right,
+    #alexander .leg.left,
+    #alexander .leg.right {
+      background: linear-gradient(180deg, #d2ffe1, #6dba8f);
     }
 
     @keyframes goldenIdle {
       0%, 100% { transform: translateY(0px) rotate(0deg); }
-      50% { transform: translateY(-6px) rotate(1.5deg); }
+      50% { transform: translateY(-8px) rotate(2.2deg); }
     }
 
     @keyframes glitchIdle {
       0%, 100% { transform: translateY(0px) rotate(0deg); }
-      50% { transform: translateY(-8px) rotate(-1.8deg); }
+      50% { transform: translateY(-9px) rotate(-2deg); }
+    }
+
+    @keyframes alexIdle {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-7px) rotate(1.8deg); }
+    }
+
+    .healthWrap {
+      position: absolute;
+      left: 50%;
+      top: 18px;
+      transform: translateX(-50%);
+      width: min(980px, 84vw);
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      z-index: 20;
+    }
+
+    .healthBox {
+      position: relative;
+      background: rgba(10,13,18,0.8);
+      border: 2px solid rgba(255,255,255,0.15);
+      padding: 8px 12px 10px;
+    }
+
+    .label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      color: #edf3fa;
+    }
+
+    .bar {
+      position: relative;
+      height: 18px;
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(0,0,0,0.45);
+      overflow: hidden;
+    }
+
+    .bar .fill {
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      transition: width 0.2s ease;
+    }
+
+    #goldHP .fill {
+      background: linear-gradient(90deg, rgba(255,255,255,0.2), var(--gold), var(--gold-dark));
+      box-shadow: 0 0 16px rgba(255,202,93,0.4);
+    }
+
+    #glitchHP .fill {
+      background: linear-gradient(90deg, rgba(255,255,255,0.2), var(--glitch), var(--glitch-dark));
+      box-shadow: 0 0 16px rgba(88,196,255,0.4);
+    }
+
+    #alexHP .fill {
+      background: linear-gradient(90deg, rgba(255,255,255,0.2), var(--alex), var(--alex-dark));
+      box-shadow: 0 0 16px rgba(130,255,165,0.38);
     }
 
     .attackBar {
       position: absolute;
-      bottom: 18px;
       left: 50%;
+      bottom: 18px;
       transform: translateX(-50%);
-      width: min(700px, 70vw);
+      width: min(760px, 70vw);
       height: 18px;
       border: 2px solid rgba(255,255,255,0.18);
-      background: rgba(0,0,0,0.45);
+      background: rgba(0,0,0,0.5);
       overflow: hidden;
-      z-index: 12;
+      z-index: 15;
     }
 
     .attackBar::before {
       content: "";
       position: absolute;
       inset: 0;
-      background: linear-gradient(90deg, rgba(131, 194, 255, 0.2), rgba(255, 255, 255, 0.06));
+      background: linear-gradient(90deg, rgba(131,194,255,0.18), rgba(255,255,255,0.08));
     }
 
     .attackBar .fill {
@@ -373,8 +562,8 @@
       top: 0;
       bottom: 0;
       width: 50%;
-      background: linear-gradient(90deg, rgba(255,255,255,0.2), rgba(255, 210, 90, 0.95), rgba(255, 125, 125, 0.9));
-      box-shadow: 0 0 16px rgba(255, 197, 85, 0.5);
+      background: linear-gradient(90deg, rgba(255,255,255,0.2), rgba(255,203,85,0.95), rgba(255,122,122,0.9));
+      box-shadow: 0 0 18px rgba(255,196,79,0.48);
       animation: powerPulse 2.1s infinite ease-in-out;
     }
 
@@ -385,8 +574,8 @@
 
     .impact {
       position: absolute;
-      width: 160px;
-      height: 160px;
+      width: 180px;
+      height: 180px;
       border-radius: 50%;
       border: 3px solid rgba(255,255,255,0.5);
       background: rgba(255,255,255,0.06);
@@ -400,113 +589,305 @@
     }
 
     @keyframes boom {
-      0% { transform: scale(0.2); opacity: 0; }
+      0% { transform: scale(0.18); opacity: 0; }
       20% { opacity: 1; }
-      100% { transform: scale(1.8); opacity: 0; }
+      100% { transform: scale(1.9); opacity: 0; }
     }
 
     .effectText {
       position: absolute;
       left: 50%;
-      top: 25%;
+      top: 22%;
       transform: translateX(-50%);
-      font-size: 30px;
+      font-size: clamp(26px, 3vw, 42px);
       letter-spacing: 5px;
       text-transform: uppercase;
       font-weight: bold;
-      color: rgba(255,255,255,0.75);
+      color: rgba(255,255,255,0.78);
       opacity: 0;
-      z-index: 16;
-      text-shadow: 0 0 15px rgba(255,255,255,0.3);
+      z-index: 18;
+      text-shadow: 0 0 18px rgba(255,255,255,0.2);
+      white-space: nowrap;
     }
 
     .effectText.show {
-      animation: textFlash 1s ease-out forwards;
+      animation: textFlash 0.9s ease-out forwards;
     }
 
     @keyframes textFlash {
       0% { opacity: 0; transform: translateX(-50%) scale(0.7); }
-      20% { opacity: 1; transform: translateX(-50%) scale(1.08); }
-      100% { opacity: 0; transform: translateX(-50%) scale(1.3); }
+      15% { opacity: 1; transform: translateX(-50%) scale(1.08); }
+      100% { opacity: 0; transform: translateX(-50%) scale(1.32); }
     }
 
-    .signature {
+    .screenShake {
+      animation: shake 0.35s linear 3;
+    }
+
+    @keyframes shake {
+      0% { transform: translate(0, 0); }
+      25% { transform: translate(-12px, 4px); }
+      50% { transform: translate(12px, -6px); }
+      75% { transform: translate(-8px, 4px); }
+      100% { transform: translate(0, 0); }
+    }
+
+    .controls {
       position: absolute;
       left: 50%;
-      top: 16px;
+      bottom: 44px;
       transform: translateX(-50%);
-      font-size: 13px;
-      letter-spacing: 4px;
-      color: rgba(255,255,255,0.5);
+      display: flex;
+      gap: 12px;
+      z-index: 25;
+      flex-wrap: wrap;
+      justify-content: center;
+      max-width: 85%;
+    }
+
+    .btn {
+      padding: 12px 18px;
+      background: rgba(18,22,29,0.9);
+      border: 1px solid rgba(255,255,255,0.18);
+      color: var(--white);
+      font-size: 11px;
+      letter-spacing: 2px;
       text-transform: uppercase;
-      z-index: 20;
+      cursor: pointer;
+      transition: 0.12s ease;
+    }
+
+    .btn:hover { background: rgba(26,34,42,1); }
+    .btn.gold { border-color: rgba(217,177,95,0.5); color: #f5d78d; }
+    .btn.glitch { border-color: rgba(116,216,255,0.5); color: #9fe7ff; }
+    .btn.alex { border-color: rgba(136,255,154,0.5); color: #b9ffd4; }
+
+    #finalScreen {
+      position: absolute;
+      inset: 0;
+      display: none;
+      place-items: center;
+      z-index: 60;
+      background: rgba(0,0,0,0.95);
+    }
+
+    #finalScreen.show {
+      display: grid;
+    }
+
+    .finalFace {
+      position: relative;
+      width: min(66vw, 540px);
+      height: min(70vh, 520px);
+      background: linear-gradient(180deg, #d9c577, #875f18);
+      border: 10px solid #090909;
+      border-radius: 24px 24px 40px 40px;
+      box-shadow: inset 0 0 18px rgba(255,255,255,0.12), 0 0 36px rgba(255,193,59,0.2);
+      animation: finalPulse 0.75s infinite alternate;
+    }
+
+    .finalFace::before,
+    .finalFace::after {
+      content: "";
+      position: absolute;
+      top: 150px;
+      width: 42px;
+      height: 62px;
+      background: #070707;
+      border-radius: 8px;
+      box-shadow: 0 0 12px rgba(255,214,120,0.7);
+    }
+
+    .finalFace::before { left: 120px; }
+    .finalFace::after { right: 120px; }
+
+    .finalFace .smile {
+      position: absolute;
+      left: 50%;
+      bottom: 112px;
+      transform: translateX(-50%);
+      width: 180px;
+      height: 72px;
+      border-bottom: 12px solid #0a0a0a;
+      border-radius: 0 0 90px 90px;
+    }
+
+    @keyframes finalPulse {
+      from { transform: scale(0.96); opacity: 0.8; }
+      to { transform: scale(1.04); opacity: 1; }
     }
   </style>
 </head>
 <body>
-  <div id="arena">
-    <div class="signature">Golden Freddy vs Glitch Freddy</div>
-    <div id="sky"></div>
-    <div class="storm"></div>
-    <div class="flash"></div>
-    <div class="lightning"></div>
-    <div class="lightning"></div>
-    <div class="lightning"></div>
-    <div class="lightning"></div>
-
-    <div id="ground"></div>
-
-    <div id="battlefield">
-      <div id="golden" class="fighter">
-        <div class="head"></div>
-        <div class="muzzle"></div>
-        <div class="body"></div>
-        <div class="arm left"></div>
-        <div class="arm right"></div>
-        <div class="leg left"></div>
-        <div class="leg right"></div>
-        <div class="foot left"></div>
-        <div class="foot right"></div>
-      </div>
-
-      <div id="glitch" class="fighter">
-        <div class="head"></div>
-        <div class="muzzle"></div>
-        <div class="body"></div>
-        <div class="arm left"></div>
-        <div class="arm right"></div>
-        <div class="leg left"></div>
-        <div class="leg right"></div>
-        <div class="foot left"></div>
-        <div class="foot right"></div>
+  <div id="game">
+    <div id="titleScreen">
+      <div class="titlePanel">
+        <div class="titleText">Golden Freddy vs Glitch Freddy and Alexander</div>
+        <div class="subtitle">Final boss battle</div>
+        <button class="startBtn" id="startGame">Start fight</button>
       </div>
     </div>
 
-    <div id="effectText" class="effectText">BATTLE!</div>
-    <div id="impact1" class="impact"></div>
-    <div id="impact2" class="impact"></div>
+    <div id="arena">
+      <div id="sky"></div>
+      <div class="storm"></div>
+      <div class="flash"></div>
+      <div class="lightning l1"></div>
+      <div class="lightning l2"></div>
+      <div class="lightning l3"></div>
+      <div class="lightning l4"></div>
 
-    <div class="attackBar"><div class="fill"></div></div>
+      <div id="ground"></div>
+
+      <div class="healthWrap">
+        <div class="healthBox" id="goldHP">
+          <div class="label">
+            <span>Golden Freddy</span>
+            <span id="goldHPText">100%</span>
+          </div>
+          <div class="bar"><div class="fill" id="goldFill"></div></div>
+        </div>
+
+        <div class="healthBox" id="glitchHP">
+          <div class="label">
+            <span>Glitch Freddy</span>
+            <span id="glitchHPText">100%</span>
+          </div>
+          <div class="bar"><div class="fill" id="glitchFill"></div></div>
+        </div>
+
+        <div class="healthBox" id="alexHP">
+          <div class="label">
+            <span>Alexander</span>
+            <span id="alexHPText">100%</span>
+          </div>
+          <div class="bar"><div class="fill" id="alexFill"></div></div>
+        </div>
+      </div>
+
+      <div id="battlefield">
+        <div id="golden" class="fighter">
+          <div class="head"></div>
+          <div class="muzzle"></div>
+          <div class="body"></div>
+          <div class="arm left"></div>
+          <div class="arm right"></div>
+          <div class="leg left"></div>
+          <div class="leg right"></div>
+          <div class="foot left"></div>
+          <div class="foot right"></div>
+        </div>
+
+        <div id="glitch" class="fighter">
+          <div class="head"></div>
+          <div class="muzzle"></div>
+          <div class="body"></div>
+          <div class="arm left"></div>
+          <div class="arm right"></div>
+          <div class="leg left"></div>
+          <div class="leg right"></div>
+          <div class="foot left"></div>
+          <div class="foot right"></div>
+        </div>
+
+        <div id="alexander" class="fighter">
+          <div class="head"></div>
+          <div class="muzzle"></div>
+          <div class="body"></div>
+          <div class="arm left"></div>
+          <div class="arm right"></div>
+          <div class="leg left"></div>
+          <div class="leg right"></div>
+          <div class="foot left"></div>
+          <div class="foot right"></div>
+        </div>
+      </div>
+
+      <div id="effectText" class="effectText">BATTLE!</div>
+
+      <div class="controls">
+        <button class="btn gold" id="goldAttack">Golden Strike</button>
+        <button class="btn glitch" id="glitchAttack">Glitch Pulse</button>
+        <button class="btn alex" id="alexAttack">Alexander Burst</button>
+        <button class="btn gold" id="goldUltra">Golden Ultra</button>
+        <button class="btn glitch" id="glitchUltra">Glitch Ultra</button>
+        <button class="btn alex" id="alexUltra">Alexander Ultra</button>
+      </div>
+
+      <div class="attackBar"><div class="fill"></div></div>
+    </div>
+
+    <div id="finalScreen">
+      <div class="finalFace">
+        <div class="smile"></div>
+      </div>
+    </div>
   </div>
 
   <script>
+    const titleScreen = document.getElementById('titleScreen');
+    const startBtn = document.getElementById('startGame');
+    const finalScreen = document.getElementById('finalScreen');
+
+    const arena = document.getElementById('arena');
     const golden = document.getElementById('golden');
     const glitch = document.getElementById('glitch');
+    const alexander = document.getElementById('alexander');
     const text = document.getElementById('effectText');
-    const impact1 = document.getElementById('impact1');
-    const impact2 = document.getElementById('impact2');
+    const goldFill = document.getElementById('goldFill');
+    const glitchFill = document.getElementById('glitchFill');
+    const alexFill = document.getElementById('alexFill');
+    const goldHPText = document.getElementById('goldHPText');
+    const glitchHPText = document.getElementById('glitchHPText');
+    const alexHPText = document.getElementById('alexHPText');
 
-    function triggerEffect(x, y, label, color) {
-      const effect = document.createElement('div');
-      effect.className = 'impact';
-      effect.style.left = x + 'px';
-      effect.style.top = y + 'px';
-      effect.style.borderColor = color;
-      effect.style.boxShadow = '0 0 16px ' + color;
-      document.getElementById('arena').appendChild(effect);
-      effect.classList.add('show');
-      setTimeout(() => effect.remove(), 700);
+    let goldHealth = 100;
+    let glitchHealth = 100;
+    let alexHealth = 100;
+    let battleStarted = false;
 
+    function showFinalFace() {
+      finalScreen.classList.add('show');
+      setTimeout(() => location.reload(), 2200);
+    }
+
+    function spawnImpact(x, y, color) {
+      const impact = document.createElement('div');
+      impact.className = 'impact';
+      impact.style.left = x + 'px';
+      impact.style.top = y + 'px';
+      impact.style.borderColor = color;
+      impact.style.boxShadow = '0 0 16px ' + color;
+      arena.appendChild(impact);
+      impact.classList.add('show');
+      setTimeout(() => impact.remove(), 700);
+    }
+
+    function updateHealth() {
+      goldFill.style.width = goldHealth + '%';
+      glitchFill.style.width = glitchHealth + '%';
+      alexFill.style.width = alexHealth + '%';
+
+      goldHPText.textContent = goldHealth + '%';
+      glitchHPText.textContent = glitchHealth + '%';
+      alexHPText.textContent = alexHealth + '%';
+
+      if (goldHealth <= 0 || glitchHealth <= 0 || alexHealth <= 0) {
+        let winner = 'Alexander';
+        if (goldHealth > glitchHealth && goldHealth > alexHealth) winner = 'Golden Freddy';
+        if (glitchHealth > goldHealth && glitchHealth > alexHealth) winner = 'Glitch Freddy';
+        if (alexHealth > goldHealth && alexHealth > glitchHealth) winner = 'Alexander';
+
+        text.textContent = winner.toUpperCase() + ' WINS';
+        text.style.color = winner === 'Golden Freddy' ? 'rgba(255,206,96,0.95)' : winner === 'Glitch Freddy' ? 'rgba(116,216,255,0.95)' : 'rgba(136,255,154,0.95)';
+        text.classList.remove('show');
+        void text.offsetWidth;
+        text.classList.add('show');
+        setTimeout(() => showFinalFace(), 250);
+      }
+    }
+
+    function triggerText(label, color) {
       text.textContent = label;
       text.style.color = color;
       text.classList.remove('show');
@@ -514,34 +895,129 @@
       text.classList.add('show');
     }
 
-    function animateBattle() {
-      golden.style.transform = 'translateX(12px) rotate(4deg)';
-      glitch.style.transform = 'translateX(-10px) rotate(-3deg)';
+    function doBattleMove() {
+      arena.classList.remove('screenShake');
+      void arena.offsetWidth;
+      arena.classList.add('screenShake');
+
+      golden.style.transform = 'translateX(18px) rotate(5deg)';
+      glitch.style.transform = 'translateX(-18px) rotate(-5deg)';
+      alexander.style.transform = 'translateX(10px) rotate(3deg)';
 
       setTimeout(() => {
-        golden.style.transform = 'translateX(-18px) rotate(-5deg)';
-        glitch.style.transform = 'translateX(16px) rotate(4deg)';
-      }, 250);
+        golden.style.transform = 'translateX(-22px) rotate(-6deg)';
+        glitch.style.transform = 'translateX(20px) rotate(6deg)';
+        alexander.style.transform = 'translateX(-10px) rotate(-4deg)';
+      }, 180);
 
       setTimeout(() => {
         golden.style.transform = 'translateX(0px) rotate(0deg)';
         glitch.style.transform = 'translateX(0px) rotate(0deg)';
-      }, 500);
+        alexander.style.transform = 'translateX(0px) rotate(0deg)';
+      }, 420);
     }
 
+    document.getElementById('goldAttack').addEventListener('click', () => {
+      if (!battleStarted || goldHealth <= 0 || glitchHealth <= 0 || alexHealth <= 0) return;
+      const dmg = 10 + Math.random() * 10;
+      glitchHealth = Math.max(0, glitchHealth - dmg);
+      if (Math.random() < 0.45) alexHealth = Math.max(0, alexHealth - 4);
+      updateHealth();
+
+      doBattleMove();
+      triggerText('STRIKE!', 'rgba(255,210,98,0.96)');
+      spawnImpact(450,270,'rgba(255,205,90,0.95)');
+    });
+
+    document.getElementById('glitchAttack').addEventListener('click', () => {
+      if (!battleStarted || goldHealth <= 0 || glitchHealth <= 0 || alexHealth <= 0) return;
+      const dmg = 9 + Math.random() * 10;
+      goldHealth = Math.max(0, goldHealth - dmg);
+      if (Math.random() < 0.4) alexHealth = Math.max(0, alexHealth - 5);
+      updateHealth();
+
+      doBattleMove();
+      triggerText('PULSE!', 'rgba(116,216,255,0.96)');
+      spawnImpact(710,300,'rgba(110,220,255,0.95)');
+    });
+
+    document.getElementById('alexAttack').addEventListener('click', () => {
+      if (!battleStarted || goldHealth <= 0 || glitchHealth <= 0 || alexHealth <= 0) return;
+      const dmg = 11 + Math.random() * 10;
+      goldHealth = Math.max(0, goldHealth - dmg * 0.8);
+      glitchHealth = Math.max(0, glitchHealth - dmg * 0.9);
+      updateHealth();
+
+      doBattleMove();
+      triggerText('BURST!', 'rgba(136,255,154,0.98)');
+      spawnImpact(620,270,'rgba(136,255,154,0.94)');
+    });
+
+    document.getElementById('goldUltra').addEventListener('click', () => {
+      if (!battleStarted || goldHealth <= 0 || glitchHealth <= 0 || alexHealth <= 0) return;
+      const dmg = 24 + Math.random() * 13;
+      glitchHealth = Math.max(0, glitchHealth - dmg);
+      alexHealth = Math.max(0, alexHealth - dmg * 0.5);
+      updateHealth();
+
+      doBattleMove();
+      triggerText('ULTRA!', 'rgba(255,194,92,0.98)');
+      spawnImpact(420,250,'rgba(255,215,115,0.95)');
+      spawnImpact(500,300,'rgba(255,163,80,0.92)');
+    });
+
+    document.getElementById('glitchUltra').addEventListener('click', () => {
+      if (!battleStarted || goldHealth <= 0 || glitchHealth <= 0 || alexHealth <= 0) return;
+      const dmg = 22 + Math.random() * 13;
+      goldHealth = Math.max(0, goldHealth - dmg);
+      alexHealth = Math.max(0, alexHealth - dmg * 0.7);
+      updateHealth();
+
+      doBattleMove();
+      triggerText('RIFT!', 'rgba(110,220,255,0.98)');
+      spawnImpact(760,260,'rgba(116,216,255,0.96)');
+      spawnImpact(700,320,'rgba(96,141,255,0.9)');
+    });
+
+    document.getElementById('alexUltra').addEventListener('click', () => {
+      if (!battleStarted || goldHealth <= 0 || glitchHealth <= 0 || alexHealth <= 0) return;
+      const dmg = 25 + Math.random() * 15;
+      goldHealth = Math.max(0, goldHealth - dmg * 0.7);
+      glitchHealth = Math.max(0, glitchHealth - dmg);
+      updateHealth();
+
+      doBattleMove();
+      triggerText('VORTEX!', 'rgba(136,255,154,0.98)');
+      spawnImpact(630,250,'rgba(136,255,154,0.98)');
+      spawnImpact(680,320,'rgba(88,255,170,0.9)');
+    });
+
+    startBtn.addEventListener('click', () => {
+      battleStarted = true;
+      titleScreen.style.display = 'none';
+      updateHealth();
+    });
+
     setInterval(() => {
-      animateBattle();
-      triggerEffect(360, 280, 'CLASH!', 'rgba(255, 213, 100, 0.9)');
+      if (!battleStarted || goldHealth <= 0 || glitchHealth <= 0 || alexHealth <= 0) return;
+
+      doBattleMove();
+      triggerText('CLASH!', 'rgba(255,213,100,0.95)');
+      spawnImpact(350,270,'rgba(255,205,90,0.9)');
       setTimeout(() => {
-        triggerEffect(760, 300, 'GLITCH!', 'rgba(105, 215, 255, 0.9)');
+        triggerText('GLITCH!', 'rgba(116,213,255,0.95)');
+        spawnImpact(780,300,'rgba(90,214,255,0.9)');
       }, 200);
     }, 2200);
 
     setInterval(() => {
+      if (!battleStarted) return;
       const flash = document.querySelector('.flash');
-      flash.style.opacity = Math.random() > 0.7 ? '0.8' : '0.2';
+      flash.style.opacity = Math.random() > 0.75 ? '0.85' : '0.18';
       setTimeout(() => { flash.style.opacity = '0'; }, 120);
-    }, 900);
+    }, 850);
+
+    updateHealth();
   </script>
 </body>
 </html>
